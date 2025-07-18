@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}StudyStack{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tiny.cloud/1/fesbbtm12ashr36xn470jiipx7sjsgubtnhhxynly2nqbsak/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Meus Resumos</a>
+            <a href="{{ url_for('create_summary') }}">Criar Resumo</a>
+        </div>
+
+        <div class="nav-search">
+            <form method="get" action="{{ url_for('index') }}">
+                <input type="search" name="q" placeholder="Buscar resumos..." value="{{ search_query or '' }}">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <button id="theme-switcher" class="theme-switcher">☀️</button>
+    </nav>
+    <hr>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const docHtml = document.documentElement; 
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                docHtml.setAttribute('data-theme', 'dark');
+                themeSwitcher.textContent = '🌙'; 
+                localStorage.setItem('theme', 'dark');
+            } else {
+                docHtml.removeAttribute('data-theme');
+                themeSwitcher.textContent = '☀️'; 
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        themeSwitcher.addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+    </script>
+</body>
+</html>

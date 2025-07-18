@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Resumos{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h2>Meus Resumos</h2>
+        <a href="{{ url_for('create_summary') }}" class="btn-primary">Criar Novo Resumo</a>
+    </div>
+
+    <div class="filtros-container">
+        {% if search_query %}
+            <h3 class="search-results-title">Resultados da busca por: "{{ search_query }}"</h3>
+        {% endif %}
+        
+        <form method="get" action="{{ url_for('index') }}">
+            <div class="filtro-item">
+                <label for="filtro_subject">Filtrar por Matéria:</label>
+                <select name="subject_id" id="filtro_subject">
+                    <option value="">Todas as Matérias</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}" {% if subject.id|string == filtro_subject_id_ativo %}selected{% endif %}>
+                            {{ subject.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filtro-item">
+                <label for="filtro_tag">Filtrar por Tag:</label>
+                <select name="tag_id" id="filtro_tag">
+                    <option value="">Todas as Tags</option>
+                    {% for tag in tags %}
+                        <option value="{{ tag.id }}" {% if tag.id|string == filtro_tag_id_ativo %}selected{% endif %}>
+                            {{ tag.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filtro-botoes">
+                <button type="submit">Filtrar</button>
+                <a href="{{ url_for('index') }}">Limpar Filtros</a>
+            </div>
+        </form>
+    </div>
+
+    {% if summaries %}
+        <div class="card-grid">
+            {% for summary in summaries %}
+                <div class="card">
+                    <div class="card-body">
+                        <span class="card-subject">{{ summary.subject.name }}</span>
+                        <h3>{{ summary.title }}</h3>
+                        <p class="card-content-preview">
+                            {{ summary.content|truncate(150, true) }}
+                        </p>
+                        <div class="card-tags">
+                            {% for tag in summary.tags %}
+                                <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('view_summary', summary_id=summary.id) }}">Ver Mais</a>
+                        <a href="{{ url_for('edit_summary', summary_id=summary.id) }}">Editar</a>
+                        <form action="{{ url_for('delete_summary', summary_id=summary.id) }}" method="post" style="display: inline;">
+                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este resumo?');">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-results">Nenhum resumo encontrado. <a href="{{ url_for('create_summary') }}">Crie o seu primeiro!</a></p>
+    {% endif %}
+{% endblock %}

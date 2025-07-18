@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ summary.title }}{% endblock %}
+
+{% block content %}
+    <div class="summary-view-container">
+        <div class="summary-header">
+            <h1>{{ summary.title }}</h1>
+            <p>
+                <strong>Matéria:</strong> <span class="subject-tag">{{ summary.subject.name }}</span>
+            </p>
+        
+            {% if summary.tags %}
+            <div class="tags-container">
+                <strong>Tags:</strong>
+                {% for tag in summary.tags %}
+                    <span class="tag">#{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <hr class="summary-divider">
+
+        <div class="summary-content">
+            {{ content|safe }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Resumo{% endblock %}
+
+{% block content %}
+    <h2>Editar: {{ summary.title }}</h2>
+    
+    {# Este truque do Jinja2 pega a lista de objetos tag, extrai o atributo 'name' de cada um e junta tudo em uma string separada por vírgula #}
+    {% set tag_names = summary.tags|map(attribute='name')|join(', ') %}
+
+    <form method="post">
+        <div>
+            <label for="title">Título:</label><br>
+            <input type="text" id="title" name="title" value="{{ summary.title }}" size="50" required>
+        </div>
+        <br>
+        <div>
+            <label for="subject">Matéria:</label><br>
+            <input type="text" id="subject" name="subject" value="{{ summary.subject.name }}" required>
+        </div>
+        <br>
+        <div>
+            <label for="tags">Tags (separadas por vírgula):</label><br>
+            <input type="text" id="tags" name="tags" value="{{ tag_names }}" size="50">
+        </div>
+        <br>
+        <div>
+            <label for="content">Conteúdo:</label><br>
+            <textarea id="content" name="content" rows="15" cols="80" required>{{ summary.content }}</textarea>
+        </div>
+        <br>
+        <button type="submit">Salvar Alterações</button>
+    </form>
+<script>
+    tinymce.init({
+        selector: '#content',
+        plugins: 'lists link image emoticons', 
+        toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link image emoticons',
+        menubar: false,
+        height: 400
+    });
+</script>
+
+{% endblock %}

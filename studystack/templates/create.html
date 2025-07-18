@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Novo Resumo{% endblock %}
+
+{% block content %}
+    <h2>Criar Novo Resumo</h2>
+    <form method="post">
+        <div>
+            <label for="title">Título:</label><br>
+            <input type="text" id="title" name="title" size="50" required>
+        </div>
+        <br>
+        <div>
+            <label for="subject">Matéria:</label><br>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <br>
+        <div>
+            <label for="tags">Tags (separadas por vírgula):</label><br>
+            <input type="text" id="tags" name="tags" size="50" placeholder="Ex: python, flask, webdev">
+        </div>
+        <br>
+        <div>
+            <label for="content">Conteúdo:</label><br>
+            <textarea id="content" name="content" rows="15" cols="80" required></textarea>
+        </div>
+        <br>
+        <button type="submit">Salvar Resumo</button>
+    </form>
+<script>
+    tinymce.init({
+        selector: '#content', 
+        plugins: 'lists link image emoticons', 
+        toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link image emoticons',
+        menubar: false,
+        height: 400
+    });
+</script>
+
+{% endblock %}
